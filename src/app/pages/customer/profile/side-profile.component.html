@@ -1,0 +1,13 @@
+<div class="account-profile-nav">
+    <div class="header">
+        <div class="profile-pic">{{customerInitials}}</div>
+        <div class="name">{{customerName}}</div>
+    </div>
+    <ul class="options-list">
+        <li (click)="profile()" class="{{profileSelected}}">{{staticContent.my_profile}}</li>
+        <li (click)="wallet()" class="{{walletSelected}}">{{staticContent.wallet}}</li>
+        <li (click)="myorders()" class="{{myordersSelected}}">{{staticContent.my_orders}}</li>
+        <!-- <li>Help</li> -->
+        <li (click)="logout()">{{staticContent.logout}}</li>
+    </ul>
+</div>

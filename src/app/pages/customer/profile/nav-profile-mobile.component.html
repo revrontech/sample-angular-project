@@ -1,0 +1,29 @@
+<!-- Mobile View -->
+<div class="mobile-view">
+    <div class="wrapper-sm">
+        <div class="fixed-header">
+            <div class="profile-mb-header">
+                <div class="icon" (click)="takeHome()"><img src="assets/close.svg" alt="close"></div>
+                <div class="text">{{staticContent.my_profile}}</div>
+            </div>
+            <div class="profile-summary">
+                <div class="image">
+                    <div class="profile-pic">{{customerInitials}}</div>
+                </div>
+                <div class="details">
+                    <div class="name">{{customerName}}</div>
+                    <div class="link" (click)="profile()">{{staticContent.my_profile}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="profile-options-list">
+            <ul>
+                <li (click)="myqrcode()">{{staticContent.my_qr_code}} <img src="assets/arrow-right.svg" alt="action"></li>
+                <li (click)="wallet()">{{staticContent.wallet}} <img src="assets/arrow-right.svg" alt="action"></li>
+                <li (click)="myorders()">{{staticContent.my_orders}} <img src="assets/arrow-right.svg" alt="action"></li>
+                <!-- <li>Help <img src="assets/arrow-right.svg" alt="action"></li> -->
+                <li (click)="logout()">{{staticContent.logout}} <img src="assets/arrow-right.svg" alt="action"></li>
+            </ul>
+        </div>
+    </div>
+</div>

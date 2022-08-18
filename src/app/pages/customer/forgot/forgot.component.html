@@ -1,0 +1,60 @@
+<!-- Login View Component -->
+<!-- Desktop View -->
+<div class="desktop-view">
+
+    <app-header-single></app-header-single>
+
+    <!-- Product List     -->
+    <div class="container">
+        <div class="row login-payment">
+            <div class="col-md-9">
+                <div class="login">
+                    <div class="login-card">
+                        <div class="title">{{staticContent.title}}</div>
+                        <form #form1="ngForm">
+                            <div class="form-group" *ngIf="forgotStep == 0">
+                                <label for="email">{{staticContent.email}}:</label>
+                                <input required type="email" class="form-control" maxlength="128"
+                                    placeholder="example@email.com" id="email" name="email" [(ngModel)]="customerEmail"
+                                    #email="ngModel">
+                            </div>
+                        </form>
+                        <form #form2="ngForm">
+                            <ng-container *ngIf="forgotStep == 1">
+                                <div class="form-group">
+                                    <label for="otp">{{staticContent.otp}}:</label>
+                                    <input required type="tel" class="form-control" pattern="[0-9]{6}" maxlength="20"
+                                        placeholder="{{staticContent.otp}}" id="otp" name="otp"
+                                        [(ngModel)]="customerOTP" #otp="ngModel">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">{{staticContent.password}}:</label>
+                                    <input required type="password" class="form-control" maxlength="16"
+                                        placeholder="{{staticContent.password}}" id="password" name="password"
+                                        [(ngModel)]="customerPassword" #password="ngModel">
+                                </div>
+                            </ng-container>
+                        </form>
+                    </div>
+                    <div class="login-footer">
+                        <div class="row">
+                            <div class="col" *ngIf="forgotStep == 0">
+                                <button (click)="login()" class="btn bordered">{{staticContent.login}}</button>
+                            </div>
+                            <div class="col" *ngIf="forgotStep == 1">
+                                <button class="btn bordered" (click)="back()">{{staticContent.back}}</button>
+                            </div>
+                            <div class="col">
+                                <button (click)="forgot()"
+                                    [disabled]="(forgotStep == 0 && !form1.valid) || (forgotStep == 1 && !form2.valid)"
+                                    class="btn">{{forgotStep == 1?staticContent.reset:staticContent.validate}}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <app-side-cart-order class="col-md-3 cart-wrapper"></app-side-cart-order>
+        </div>
+        <div class="space-100"></div>
+    </div>
+</div>

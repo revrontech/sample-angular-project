@@ -1,0 +1,31 @@
+<!-- Forgot Password Modal -->
+<!-- Modal Header -->
+<header class="header-mobile">
+    <div class="menu dismiss" (click)="modal.close()"><img src="assets/close.svg"></div>
+    <div class="logo"><img src="{{brandLogo}}" alt="Logo"></div>
+    <div class="cart"><img (click)="openCart()" src="assets/cart.svg" alt="Cart"></div>
+</header>
+
+<!-- Modal body -->
+<div class="modal-body">
+    <h4 class="title">{{staticContent.title}}</h4>
+
+    <form #form1="ngForm">
+        <div class="form-group" *ngIf="validateStep == 0">
+            <label for="email">{{staticContent.email}}:</label>
+            <input required class="form-control" pattern=".+@.+\..+" type="email" maxlength="128" name="email"
+                id="email" placeholder="example@email.com" [(ngModel)]="customerEmail" #email="ngModel">
+        </div>
+    </form>
+    <form #form2="ngForm">
+        <div class="form-group" *ngIf="validateStep == 1">
+            <label for="otp">{{staticContent.otp}}:</label>
+            <input required type="tel" class="form-control" pattern="[0-9]{6}" maxlength="20"
+                placeholder="{{staticContent.otp}}" id="otp" name="otp" [(ngModel)]="customerOTP" #otp="ngModel">
+        </div>
+    </form>
+
+    <button type="submit" class="btn" (click)="validate()"
+        [disabled]="(validateStep == 0 && !form1.valid) || (validateStep == 1 && !form2.valid)">{{staticContent.validate}}</button>
+    <button class="btn bordered mb-4" (click)="goBack()">{{staticContent.back}}</button>
+</div>

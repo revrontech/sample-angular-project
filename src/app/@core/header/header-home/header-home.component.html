@@ -1,0 +1,16 @@
+<!-- Home Header Component -->
+<header>
+    <div class="row">
+        <div (click)="homeListener()" class="{{enableOrderButton?'col-8':'col-12'}} logo">
+            <!--<div (click)="homeListener()" class="{{enableOrderButton?'col-8':'col-12'}} col-md-6 logo {{!checkBlock?'logo-pointer':''}}">-->
+            <img class="img-filter-none" *ngIf='icon' src="{{icon}}" alt="logo">
+            <span *ngIf='companyNameFirst || companyNameLast'>
+                <h4>{{companyNameFirst}}</h4>
+                <h5>{{companyNameLast}}</h5>
+            </span>
+        </div>
+        <div class="col-4 login text-right" (click)="navigateRestaurantHome()" *ngIf='enableOrderButton'>
+            <button class="btn header-btn">Commander</button>
+        </div>
+    </div>
+</header>

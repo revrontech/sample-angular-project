@@ -1,0 +1,40 @@
+<!-- Single Header View Component -->
+<div class="sticky-header">
+    <div class="category-menu-fixed">
+        <div class="d-flex align-items-center">
+            <div class="left">
+                <button class="icon-btn back" (click)="goBack()"><img src="assets/arrow-left.svg" alt=""></button>
+                <img class="logo" src="{{brandLogo}}" alt="logo">
+            </div>
+            <div class="category">
+                <ul #stickyMenu>
+                    
+                    <ng-container *ngFor="let category of categoryList">
+                        <li class="{{selectedCategory.id == category.id?'active':''}}"
+                            (click)="selectCategory(category)">
+                            {{category.label}}</li>
+                    </ng-container>
+                    <!--<li (click)="setMenuCounter(1)"
+                        *ngIf="(categoryList.length - menuCounter) > (showMenu && menuCounter == 0 ? maxMenuCount : maxWithMenuCount)"
+                        class="menu-forward">
+                        <img src="assets/arrow-left.svg" alt="right"></li> -->
+                </ul>
+            </div>
+            <div class="right">
+                <ul ngbDropdown class="second-menu {{dropdownMenuCategoryList.length == 0?'hidden':''}}">
+                    <li ngbDropdownToggle class="menu-forward">
+                        Voir plus<img ngbDropdownToggle src="assets/arrow-left.svg" alt="right"></li>
+                    <div class="dropdown-menu" ngbDropdownMenu>
+                        <a class="dropdown-item {{selectedCategory.id == category.id?'active':''}}"
+                            *ngFor="let category of dropdownMenuCategoryList" (click)="selectCategory(category)">
+                            {{category.label}}
+                        </a>
+                    </div>
+                </ul>
+                <button class="btn allergens" (click)="openModal()">{{staticContent.select_allergens}}</button>
+                <button *ngIf="allowOrder" (click)="loginCheck()" class="icon-btn"><img src="assets/user.svg"
+                        alt=""></button>
+            </div>
+        </div>
+    </div>
+</div>

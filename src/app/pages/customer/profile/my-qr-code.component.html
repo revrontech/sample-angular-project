@@ -1,0 +1,27 @@
+<!-- Mobile View -->
+<div class="mobile-view">
+    <div class="wrapper-sm">
+        <div class="fixed-header">
+            <div class="profile-mb-header">
+                <div class="icon" (click)="takeHome()"><img src="assets/close.svg" alt="close"></div>
+                <div class="text">{{staticContent.my_qr_code}}</div>
+            </div>
+        </div>
+        <div class="profile-qr-content">
+            <div class="profile-qr-user-info">
+                <div class="image">
+                    <div class="profile-pic">{{customerInitials}}</div>
+                </div>
+                <div class="details">
+                    <div class="name">{{customerName}}</div>
+                    <div class="points">{{points}} {{staticContent.points}}</div>
+                </div>
+            </div>
+            <div class="qr-code">
+                <img src="{{myQrCode}}"/>
+            </div>
+            <div class="text-qr-code">Scannez votre QRCode en borne pour vous identifier et profiter de vos privilèges</div>
+        </div>
+        
+    </div>
+</div>

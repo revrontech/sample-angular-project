@@ -1,0 +1,9 @@
+<!-- Catalog Mobile Header View Component -->
+<div class="fixed-header">
+    <header class="header-mobile">
+        <div class="menu" (click)="openModal('menu')"><img src="assets/menu.svg"></div>
+        <div class="logo"><img src="{{brandLogo}}" alt="Logo"></div>
+        <div *ngIf="!allowOrder" class="cart"></div>
+        <div *ngIf="allowOrder" class="cart" (click)="openModal('cart')"><img src="assets/cart.svg" alt="Cart"><div class="products-added">{{cartListSize}}</div></div>
+    </header>
+</div>

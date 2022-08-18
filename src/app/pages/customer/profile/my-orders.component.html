@@ -1,0 +1,174 @@
+<div class="my-orders-page">
+    <!-- Header -->
+    <app-header-single></app-header-single>
+    <div class="wrapper-sm">
+        <div class="fixed-header">
+            <div class="profile-mb-header">
+                <div class="icon" (click)="takeHome()"><img src="assets/close.svg" alt="close"></div>
+                <div class="text">{{staticContent.my_orders}}</div>
+            </div>
+        </div>
+    </div>
+    <!-- Body -->
+    <div class="container">
+        <div class="row cart-details">
+            <div class="col-lg-3">
+                <app-side-profile></app-side-profile>
+            </div>
+            <div class="col-lg-9">
+                <div class="profile-my-orders">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link {{showTab == 1?'active':''}}" data-toggle="tab"
+                                (click)="showOngoing()">{{staticContent.ongoing}}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{showTab == 2?'active':''}}" data-toggle="tab"
+                                (click)="showHistory()">{{staticContent.history}}</a>
+                        </li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <!-- Order list-->
+                        <div class="tab-pane active">
+                            <!-- Empty list-->
+                            <div class="empty-state" *ngIf="activeList.length==0">
+                                <img src="assets/empty-state-profile-orders.svg" alt="No Orders Exist">
+                                <p>{{staticContent.no_order}}</p>
+                            </div>
+                            <!-- loaded order list-->
+                            <ng-container *ngIf="activeList.length>0">
+                                <div class="profile-order-history">
+                                    <ng-container *ngFor="let order of activeList">
+                                        <div class="card">
+                                            <!-- Order element -->
+                                            <div class="card-header" (click)="toggleOrder(order)">
+                                                <div class="excerpt">
+                                                    <div class="order-details">
+                                                        <div class="order-date">
+                                                            {{changeDateFormat(order.created_at)| date: 'dd/MM/yyyy'}} à {{changeDateFormat(order.created_at) | date: 'hh:mm'}}
+                                                        </div>
+                                                        <div class="order-info">
+                                                            <div class="order-restaurant-name">{{order.brand_label}}</div>
+                                                            <div class="order-status">Livraison {{order.consumption_mode}} <span>»</span> {{order.payment_status_text}} <span>»</span> {{order.order_status_text}}</div>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    <div class="dropdown">
+                                                        {{order.show?staticContent.close:staticContent.order_details}}
+                                                        <img class="{{order.show?'order-active':'order-inactive'}}"
+                                                            src="assets/arrow-down.svg">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Order details -->
+                                            <div class="card-body" *ngIf="order.show" [@heightAnimation]>
+                                                <div class="zig-zag-bottom">
+                                                    <div class="zig-zag-titles">
+                                                        <div class="name">{{staticContent.name}}</div>
+                                                        <div class="qty">{{staticContent.quantity}}</div>
+                                                        <div class="amount-no-tax">{{staticContent.price_exc_tax}}</div>
+                                                        <div class="amount">{{staticContent.price_inc_tax}}</div>
+                                                    </div>
+                                                    <div class="zig-zag-product-list">
+                                                        <ng-container *ngFor="let item of order.order_items">
+                                                            <!-- For product -->
+                                                            <ng-container *ngIf="item.type === 2">
+                                                                <div class="product">
+                                                                    <div class="product-details">
+                                                                        <div class="name">{{item.label}}</div>
+                                                                        <div class="qty">x {{item.quantity}}</div>
+                                                                        <div class="amount-no-tax">{{floatCheck(item.price_excl_tax)}} €</div>
+                                                                        <div class="amount">{{floatCheck(item.total_price)}} €</div>
+                                                                    </div>
+                                                                    <div class="product-options-list">
+                                                                        <ng-container *ngFor="let option of item.options">
+                                                                            <div class="option">
+                                                                                <div class="option-details">
+                                                                                    <div class="option-name">{{option.label}}</div>
+                                                                                    <div class="amount-no-tax">{{option.price_excl_tax === "0.00"?'':floatCheck(option.price_excl_tax)+' €'}}</div>
+                                                                                    <div class="amount">{{option.price === "0.00"?'':floatCheck(option.price)+' €'}}</div>
+                                                                                </div>
+                                                                                <div class="option-subitems">
+                                                                                    <ng-container *ngFor="let subitem of option.option_items">
+                                                                                        <div class="subitem">
+                                                                                            <div class="subitems-name">{{subitem.label}}</div>
+                                                                                            <div class="amount-no-tax">{{subitem.price_excl_tax === "0.00"?'':'+ ' +floatCheck(subitem.price_excl_tax)+' €'}}</div>
+                                                                                            <div class="amount">{{subitem.price === "0.00"?'':'+ ' +floatCheck(subitem.price)+' €'}}</div>
+                                                                                        </div>
+                                                                                    </ng-container>
+                                                                                </div>
+                                                                            </div>
+                                                                        </ng-container>
+                                                                    </div>
+                                                                </div>
+                                                            </ng-container>
+                                                            <!-- For menu -->
+                                                            <ng-container *ngIf="item.type === 1">
+                                                                <div class="product">
+                                                                    <div class="product-details">
+                                                                        <div class="name">{{item.label}}</div>
+                                                                        <div class="qty">x {{item.quantity}}</div>
+                                                                        <div class="amount-no-tax">{{floatCheck(item.price_excl_tax)}} €</div>
+                                                                        <div class="amount">{{floatCheck(item.total_price)}} €</div>
+                                                                    </div>
+                                                                    <div class="product-options-list">
+                                                                        <ng-container *ngFor="let product of item.product_list">
+                                                                            <div class="option">
+                                                                                <div class="option-details">
+                                                                                    <div class="option-name">{{product.label}}</div>
+                                                                                    <div class="amount-no-tax">{{product.price_excl_tax === "0.00"?'':floatCheck(product.price_excl_tax)+' €'}}</div>
+                                                                                    <div class="amount">{{product.price === "0.00"?'':floatCheck(product.price)+' €'}}</div>
+                                                                                </div>
+                                                                                <div class="product-suboptions">
+                                                                                    <ng-container *ngFor="let option of product.options">
+                                                                                        <div class="suboptions">
+                                                                                            <div class="suboptions-name">{{option.label}}</div>
+                                                                                            <div class="amount-no-tax">{{option.price_excl_tax === "0.00"?'':'+ ' +floatCheck(option.price_excl_tax)+' €'}}</div>
+                                                                                            <div class="amount">{{option.price === "0.00"?'':'+ ' +floatCheck(option.price)+' €'}}</div>
+                                                                                        </div>
+                                                                                        <div class="option-subitems">
+                                                                                            <ng-container *ngFor="let subitem of option.option_items">
+                                                                                                <div class="subitem">
+                                                                                                    <div class="subitems-name">{{subitem.label}}</div>
+                                                                                                    <div class="amount-no-tax">{{subitem.price_excl_tax === "0.00"?'':'+ ' +floatCheck(subitem.price_excl_tax)+' €'}}</div>
+                                                                                                    <div class="amount">{{subitem.price === "0.00"?'':'+ ' +floatCheck(subitem.price)+' €'}}</div>
+                                                                                                </div>
+                                                                                            </ng-container>
+                                                                                        </div>
+                                                                                    </ng-container>
+                                                                                </div>
+                                                                            </div>
+                                                                            
+                                                                        </ng-container>
+                                                                    </div>
+                                                                </div>
+                                                            </ng-container>
+                                                            
+                                                        </ng-container>
+                                                    </div>
+                                                    <div class="zig-zag-total">
+                                                        <div class="title-total">{{staticContent.total}}</div>
+                                                        <div class="amount-no-tax">{{floatCheck(order.price_excl_tax)}} €</div>
+                                                        <div class="amount">{{floatCheck(order.final_price)}} €</div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="actions">
+                                                    <button class="btn" (click)="viewTracking(order)" *ngIf="showTab === 1">Suivre votre commande</button>
+                                                </div> 
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="space-100"></div>
+    </div>
+</div>

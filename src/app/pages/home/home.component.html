@@ -1,0 +1,93 @@
+<!-- Home View Component -->
+<div class="rst-selection" [ngStyle]="{'background-image':'url(' + backgroundImage + ')'}">
+
+    <app-header-home [checkBlock]="showBlockOne"></app-header-home>
+
+    <div class="search-wrapper">
+        <div class="d-flex flex-wrap align-content-center text-center vh-100">
+            <ng-container *ngIf="!showScanner">
+                <ng-container *ngIf="showBlockOne || showBlockTwo">
+                    <h1>{{companyName}}</h1>
+                    <p class="desc w-100">{{companyDescription}}</p>
+                </ng-container>
+                <ng-container *ngIf="showBlockOne">
+                    <div class="label">{{staticContent.choose_restaurant}}</div>
+                    <div class="search search-select">
+                        <ng-select2 class="single-search" [data]="restaurantList"
+                            [placeholder]="staticContent.select_restaurant" (valueChanged)="valueChanged($event)">
+                        </ng-select2>
+                        <img class="search-dropdown-icon" src="assets/arrow-down.svg">
+                    </div>
+                    <div class="submit">
+                        <button class="btn {{(selectedRestaurant == '')?'disabled':''}}"
+                            (click)="(selectedRestaurant == '')?'':redirectBlock('1')">{{staticContent.continue}}</button>
+                    </div>
+
+                    <div class="mobile-tabs">
+                        <div class="tab active">
+                            <div class="fill"></div>
+                        </div>
+                        <div class="tab">
+                            <div class="fill"></div>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="showBlockTwo">
+                    <div class="label">{{staticContent.i_order}}</div>
+                    <div class="order-type">
+                        <button (click)="selectOrderLocation('0')"
+                            class="btn {{remoteSelected?'':'inactive'}}" *ngIf="takeAwayEnabled || deliveryEnabled" [disabled]="!(takeAwayOpen || deliveryOpen)">{{staticContent.remotely}}</button>
+                            <button (click)="selectOrderLocation('1')"
+                            class="btn {{spotSelected?'':'inactive'}} {{!spotOpen?'gray':''}}" *ngIf="spotEnabled" [disabled]="!spotOpen">{{staticContent.on_the_spot}}</button>
+                    </div>
+
+                    <ng-container *ngIf="remoteSelected">
+                        <div class="label">{{staticContent.i_eat}}</div>
+                        <div class="order-type">
+                            <button class="btn {{takeAwaySelected?'':'inactive'}} {{!takeAwayOpen?'gray':''}}"  *ngIf="takeAwayEnabled"
+                                (click)="selectRemoteLocation('0')" [disabled]="!takeAwayOpen">{{staticContent.take_away}}</button>
+                            <button class="btn {{deliverySelected?'':'inactive'}} {{!deliveryOpen?'gray':''}}"  *ngIf="deliveryEnabled"
+                                (click)="selectRemoteLocation('1')" [disabled]="!deliveryOpen">{{staticContent.delivery}}</button>
+                                <ngb-carousel class="carousel slotslist {{deliverySelected? 'right':''}} {{slotSliderId == 0 ? 'first':''}} {{slideSlotsLists.length == 1 ? 'unique' : ''}}
+                                {{slotSliderId==slideSlotsLists.length-1 ? 'last' : ''}} {{ !this.takeAwayEnabled || !this.deliveryEnabled ? 'carousel-100' : '' }}" [showNavigationArrows]="true"
+                                [showNavigationIndicators]="false" [interval]="false" (slide)="onSlide($event)" [(activeId)]="this.slotSliderId" *ngIf="slideSlotsLists.length != 0">
+                                    <ng-template ngbSlide class="carousel-item" *ngFor="let slide of slideSlotsLists; let i = index" [id]="i">
+                                        <button *ngFor="let slot of slide.slots" nbButton size="tiny" class="btn slot {{slot.selected?'':'noSelected'}}"
+                                        (click)="selectSlot(slot)" [disabled]="slot.current_order >= slot.max_order">{{slot.start}}</button>
+                                    </ng-template>
+                                </ngb-carousel>
+                        </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="spotSelected">
+                        <div class="space-28"></div>
+
+                        <div class="search">
+                            <input type="tel" name="location_id" #location_id="ngModel" [(ngModel)]="locationId"
+                                maxlength="6" placeholder="{{staticContent.set_location}}">
+                        </div>
+                    </ng-container>
+
+                    <div class="submit">
+<!--                        <button (click)="redirectBlock('0')" class="btn back"><img src="assets/arrow-left.svg">
+                            {{staticContent.back}}</button>-->
+                        <a href="javascript:void(0)">
+                            <button class="btn w-100 {{(spotSelected && locationId == '')?'disabled':''}}" [disabled] = "!selectedSlot.selected && !spotSelected && slideSlotsLists.length != 0"
+                                (click)="(spotSelected && locationId == '')?'':redirectBlock('2')">{{staticContent.continue}}</button>
+                        </a>
+                    </div>
+
+<!--                    <div class="mobile-tabs">
+                        <div class="tab" (click)="redirectBlock('0')">
+                            <div class="fill"></div>
+                        </div>
+                        <div class="tab active">
+                            <div class="fill"></div>
+                        </div>
+                    </div>-->
+                </ng-container>
+            </ng-container>
+        </div>
+    </div>
+</div>

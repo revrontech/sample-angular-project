@@ -1,0 +1,112 @@
+<!-- Login View Component -->
+<!-- Desktop View -->
+<div class="desktop-view">
+
+    <app-header-single></app-header-single>
+
+    <!-- Product List     -->
+    <div class="container">
+        <div class="row login-payment">
+            <div class="col-md-9">
+                <div class="login register">
+                    <!-- <div class="back">
+                        <img src="assets/cancel.svg">
+                    </div> -->
+
+                    <div class="login-card">
+                        <div class="title">{{staticContent.title}}</div>
+                        <div class="desc">{{staticContent.description}}</div>
+                        <!-- <div class="subtitle">
+                            Join with social media
+                        </div>
+                        <div class="two-column-input">
+                            <div class="column-1">
+                                <button class="btn"><img src="assets/facebook.svg"> Facebook</button>
+                            </div>
+                            <div class="column-2">
+                                <button class="btn"><img src="assets/google.svg"> Google</button>
+                            </div>
+                        </div> -->
+                        <div class="subtitle">{{staticContent.email_register}}</div>
+
+                        <form #form1="ngForm">
+                            <ng-container *ngIf="registerStep == 0">
+                                <div class="two-column-input">
+                                    <div class="column-1">
+                                        <div class="form-group">
+                                            <label for="firstname">{{staticContent.firstname}}:</label>
+                                            <input required type="text" class="form-control" maxlength="32"
+                                                placeholder="{{staticContent.firstname}}" id="firstname"
+                                                name="firstname" [(ngModel)]="firstName" #firstname="ngModel">
+                                        </div>
+                                    </div>
+                                    <div class="column-2">
+                                        <div class="form-group">
+                                            <label for="lastname">{{staticContent.lastname}}:</label>
+                                            <input required type="type" class="form-control" maxlength="32"
+                                                placeholder="{{staticContent.lastname}}" id="lastname" name="lastname"
+                                                [(ngModel)]="lastName" #lastname="ngModel">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">{{staticContent.email}}:</label>
+                                    <input required type="email" class="form-control" maxlength="128"
+                                        placeholder="example@email.com" id="email" name="email"
+                                        [(ngModel)]="customerEmail" #email="ngModel">
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">{{staticContent.phone}}:</label>
+                                    <input required type="tel" class="form-control" pattern="[\+]{0,1}[0-9\- ]+"
+                                        maxlength="20" placeholder="+1 789 456 123" id="phone" name="phone"
+                                        [(ngModel)]="customerPhone" #phone="ngModel">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">{{staticContent.password}}:</label>
+                                    <input required type="password" class="form-control" maxlength="16"
+                                        placeholder="{{staticContent.password}}" id="password" name="password"
+                                        [(ngModel)]="customerPassword" #password="ngModel">
+                                </div>
+
+                                <div class="form-group remember-me">
+                                    <div class="custom-control custom-checkbox">
+                                        <input required type="checkbox" class="custom-control-input" name="termsOfUse" id="termsOfUse" [(ngModel)]="this.termsOfUse">
+                                        <label class="custom-control-label" for="termsOfUse">
+                                            J'ai lu et j'accepte les
+                                            <a href="https://www.green2green.com/conditions-generales-de-vente/" target="_blank">conditions d'utilisation</a>
+                                            et la
+                                            <a href="https://www.green2green.com/politique-de-confidentialite/" target="_blank">politique de protection des données personnelles</a>
+                                        </label>
+                                    </div>
+                                </div>
+
+                            </ng-container>
+                        </form>
+                        <form #form2="ngForm">
+                            <div class="form-group" *ngIf="registerStep == 1">
+                                <label for="otp">{{staticContent.otp}}:</label>
+                                <input required type="tel" class="form-control" pattern="[0-9]{6}" maxlength="20"
+                                    placeholder="{{staticContent.otp}}" id="otp" name="otp" [(ngModel)]="customerOTP"
+                                    #otp="ngModel">
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="login-footer">
+                        <div class="row">
+                            <div class="col" *ngIf="registerStep == 0"><button class="btn bordered"
+                                    (click)="login()">{{staticContent.login}}</button></div>
+                            <div class="col" *ngIf="registerStep == 1"><button class="btn bordered"
+                                    (click)="back()">{{staticContent.back}}</button></div>
+                            <div class="col"><button class="btn" (click)="register()"
+                                    [disabled]="(registerStep == 0 && !form1.valid) || (registerStep == 1 && !form2.valid)">{{registerStep == 1?staticContent.verify_otp:staticContent.register}}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <app-side-cart-order class="col-md-3 cart-wrapper"></app-side-cart-order>
+        </div>
+        <div class="space-100"></div>
+    </div>
+</div>

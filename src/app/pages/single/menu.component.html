@@ -1,0 +1,461 @@
+<!-- Single Menu View Component -->
+
+<!-- Desktop View -->
+<div class="desktop-view">
+    <!-- Fixed Header -->
+    <app-header-single></app-header-single>
+    <!-- Product Details -->
+    <div class="container product-details">
+        <!-- Breadcrumb Navigation -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)"
+                        (click)="navigate('home')">{{staticContent.bread_crumb_main}}</a></li>
+                <li class="breadcrumb-item"><a href="javascript:void(0)"
+                        (click)="navigate('catalog')">{{staticContent.bread_crumb_catalog}}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{staticContent.bread_crumb_menu}}</li>
+            </ol>
+        </nav>
+        <div class="row mt-45">
+            <div class="col" *ngIf="!allowOrder"></div>
+            <div class="col-md-9">
+                <div class="row simple-product" [ngClass]="{'out-of-stock': item?.out_of_stock}">
+                    <div class="col image">
+                        <img src="{{item.img_url_set.XL}}" alt="{{item.label}}">
+                    </div>
+                    <div class="col details">
+                        <div class="two-column-name">
+                            <div class="column-1">
+                                <div class="name">{{item.label}}</div>
+                            </div>
+                            <div class="column-2" *ngIf="item.event_price > 0 || item.price > 0">
+                                <div class="cost">{{item.event_price != 0?item.event_price:item.price }} €</div>
+                            </div>
+                        </div>
+                        <div class="product-desc">{{item.description}}</div>
+                        <!-- <div class="allergens" *ngIf="allergenList.length > 0">
+                            <ng-container *ngFor="let allergen of allergenList">
+                                <img class="{{selectedAllergen.indexOf(allergen.id)>-1?'active':'inactive'}}"
+                                    src="{{allergen.picto_url}}" alt="{{allergen.label}}">
+                            </ng-container>
+                            <img class="inactive" src="assets/allergens/Crustacean.svg" alt="Crustacean">
+                            <img class="inactive" src="assets/allergens/Fish.svg" alt="Fish">
+                            <span (click)="openModal()">{{staticContent.allergens}}</span>
+                        </div> -->
+                        <!-- <div class="add-remove" *ngIf="item.quantity > 0">
+                            <div class="action" (click)="removeItem()"><img src="assets/remove.svg"></div>
+                            <div class="qty">{{item.quantity}}</div>
+                            <div class="action" (click)="addItem()"><img src="assets/add.svg"></div>
+                        </div> -->
+                        <div class="two-column-input">
+                            <div class="column-1">
+                                <button class="btn bordered"
+                                    (click)="navigate('catalog')">{{staticContent.back_to_catalog}}</button>
+                            </div>
+                            <div class="column-2" *ngIf="allowOrder">
+                                <button *ngIf="item.quantity == 0" class="btn bordered"
+                                    (click)="cartClickAnimation($event)"
+                                    disabled="{{(stepCount == (item.submenu.length - 1)) && selectedSubmenu.has_product && allowNext?'':'disabled'}}"
+                                    (click)="stepCount == (item.submenu.length - 1)?addToCart():''">{{staticContent.add_to_cart}}
+                                    <div class="iconcheck"></div></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Line tab layout -->
+                <ng-container *ngIf="item.submenu">
+                    <div class="line-tab-layout">
+                        <div *ngFor="let category of item.submenu;let i=index" class="tab">
+                            <div class="line {{stepCount >= i?'active':''}}"></div>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <!-- <div class="line-tab-layout">
+                    <div class="tab col">
+                        <div class="line active"></div>
+                    </div>
+                    <div class="tab col">
+                        <div class="line"></div>
+                    </div>
+                    <div class="tab col">
+                        <div class="line"></div>
+                    </div>
+                    <div class="tab col">
+                        <div class="line"></div>
+                    </div>
+                </div> -->
+
+                <ng-container *ngIf="selectedSubmenu">
+                    <div class="product-options-title">{{selectedSubmenu.label}}
+                        <!-- <span class="option-tab-cntrols" *ngIf="showSubmenuProduct.length > 1">
+                            <img class="left" src="assets/arrow-right.svg" alt="left" (click)="carousel.prev()">
+                            <img src="assets/arrow-right.svg" alt="right" (click)="carousel.next()">
+                        </span>-->
+                    </div>
+                    <div class="row product-options-container">
+                        <ng-container *ngFor="let product of selectedSubmenu.product_list">
+                            <div class="col-4 options">
+
+                                <div class="options-card {{selectedProduct && selectedProduct != product?'deactive':''}} {{product.selected?'active':''}}" *ngIf="!product?.out_of_stock"
+                                     (click)="allowOrder && selectProduct(product)">
+                                    <img src="{{product.img_url_set.L}}" alt="base">
+                                    <div class="name">{{product.label}}
+                                        <ng-container *ngIf="product.additional_price > 0">
+                                            <span class="amount"> + {{floatCheck(product.additional_price)}} €</span>
+                                        </ng-container>
+                                    </div>
+                                </div>
+
+                                <!-- OUT OF STOCK LABEL -->
+                                <div class="row mx-0 w-100 out-of-stock-desktop-label" *ngIf="product?.out_of_stock">
+                                    <div class="col text-center">
+                                        <span>{{this.brand?.module_parameter?.out_of_stock_label}}</span>
+                                    </div>
+                                </div>
+
+                                <!-- OUT OF STOCK -->
+                                <div class="options-card out-of-stock" *ngIf="product?.out_of_stock">
+                                    <img src="{{product.img_url_set.L}}" alt="base">
+                                    <div class="name">{{product.label}}
+                                        <ng-container *ngIf="product.additional_price > 0">
+                                            <span class="amount"> + {{floatCheck(product.additional_price)}} €</span>
+                                        </ng-container>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </ng-container>
+                    </div>
+                    <!-- <ngb-carousel #carousel class="carousel slide" [showNavigationIndicators]="false"
+                        [showNavigationArrows]="false" [interval]="false">
+                        <ng-container *ngFor="let product_list of showSubmenuProduct">
+                            <ng-template ngbSlide class="carousel-item">
+                                <div class="row product-options-container">
+                                    <ng-container *ngFor="let product of product_list">
+                                        <div class="col-4 options">
+                                            <div class="options-card {{selectedProduct && selectedProduct != product?'deactive':''}} {{product.selected?'active':''}}"
+                                                (click)="allowOrder && selectProduct(product)">
+                                                <img src="{{product.img_url}}" alt="base">
+                                                <div class="name">{{product.label}}</div>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </ng-template>
+                        </ng-container>
+                    </ngb-carousel>
+                    <div class="row product-options-container">
+                        <ng-container *ngFor="let product of selectedSubmenu.product_list; let i=index">
+                            <div class="col-4 options">
+                                <div class="options-card {{product.selected?'active':''}}"
+                                    (click)="selectProduct(product,i)">
+                                    <img src="{{product.img_url}}" alt="base">
+                                    <div class="name">{{product.label}}</div>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div> -->
+                </ng-container>
+
+                <!-- Layouts for different types of options -->
+                <ng-container *ngIf="selectedProduct">
+                    <ng-container *ngIf="selectedProduct.options">
+                        <ng-container *ngFor="let option of selectedProduct.options">
+                            <ng-container *ngIf="!option.is_custom">
+                                <div class="product-options-title">{{option.label}}
+                                    <ng-container *ngIf="option.price > 0">
+                                        <span class="add-icon"> + </span>
+                                        <span class="amount">{{floatCheck(option.price)}} €</span>
+                                    </ng-container>
+                                </div>
+                                <div class="product-options-subtitle">{{staticContent.select_items}} : <ng-container
+                                        *ngIf="option.fixed_number != option.maximum">{{option.fixed_number}}
+                                        {{staticContent.to}} {{option.maximum}}
+                                    </ng-container>
+                                    <ng-container *ngIf="option.fixed_number == option.maximum">{{option.fixed_number}}
+                                    </ng-container>
+                                </div>
+                                <div class="row product-options-container">
+                                    <ng-container *ngFor="let optionItem of option.option_items">
+                                        <div class="col-4 options">
+                                            <div class="options-card {{optionItem.selected?'active':''}} {{!optionItem.selected && option.max_selected?'deactive':''}}"
+                                                (click)="selectOption(optionItem,option)">
+                                                <div class="drinks">
+                                                    <img src="{{optionItem.asset_set.M}}" alt="base">
+                                                </div>
+                                                <div class="name">{{optionItem.label}}
+                                                    <ng-container *ngIf="optionItem.price > 0">
+                                                        <span class="amount">+ {{floatCheck(optionItem.price)}} €</span>
+                                                    </ng-container>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
+                <!-- Layouts for different types of options ends here-->
+                <!-- Tab navigation buttons -->
+                <div *ngIf="allowOrder" class="line-tab-navigation">
+                    <button *ngIf="item.submenu.length > 1" class="btn bordered back"
+                        disabled="{{stepCount > 0?'':'disabled'}}" (click)="stepCount > 0?previousCategory():''">
+                        <img src="assets/arrow-thin-left.svg">{{staticContent.back}}</button>
+                    <button *ngIf="item.submenu.length > 1 && (stepCount < (item.submenu.length - 1))"
+                        class="btn next"
+                        disabled="{{((stepCount + 1) < item.submenu.length) && selectedSubmenu.has_product && allowNext?'':'disabled'}}"
+                        (click)="(stepCount + 1) < item.submenu.length?nextCategory():''">{{staticContent.next}}<img
+                            src="assets/arrow-thin-right.svg"></button>
+                    <button
+                        *ngIf="item.submenu.length > 1 && stepCount == (item.submenu.length - 1) && item.quantity == 0"
+                        disabled="{{selectedSubmenu.has_product && allowNext?'':'disabled'}}" class="btn next bordered"
+                        (click)="cartClickAnimation($event)" (click)="addToCart()">{{staticContent.add_to_cart}}
+                        <div class="iconcheck"></div>
+                    </button>
+                </div>
+                <div *ngIf="!allowOrder" class="line-tab-navigation">
+                    <button *ngIf="item.submenu.length > 1" class="btn bordered back"
+                        (click)="stepCount > 0?previousCategory():''">
+                        <img src="assets/arrow-thin-left.svg">{{staticContent.back}}</button>
+                    <button *ngIf="item.submenu.length > 1 && (stepCount < (item.submenu.length - 1))"
+                        class="btn next"
+                        (click)="(stepCount + 1) < item.submenu.length?nextCategory():''">{{staticContent.next}}
+                        <div class="iconcheck"></div><img src="assets/arrow-thin-right.svg"></button>
+                </div>
+            </div>
+            <div class="col" *ngIf="!allowOrder"></div>
+            <!-- Right side fixed cart -->
+            <app-side-cart *ngIf="allowOrder" class="col-md-3 cart-wrapper"></app-side-cart>
+        </div>
+        <div class="space-100"></div>
+    </div>
+</div>
+
+<!-- Mobile View | This single page coves all the elements required for displaying mobile menu -->
+<div class="mobile-view">
+    <div class="product-details">
+        <!-- Mobile Header -->
+        <app-header-single-mobile></app-header-single-mobile>
+
+        <div class="mobile-product-view">
+            <div class="row simple-product">
+                <div class="col image">
+                    <img src="{{item.img_url_set.L}}" alt="{{item.label}}">
+                </div>
+                <div class="col details">
+                    <div class="two-column-name">
+                        <div class="column-1">
+                            <div class="name">{{item.label}}</div>
+                        </div>
+                        <div class="column-2" *ngIf="item.event_price > 0 || item.price > 0">
+                            <div class="cost">{{item.event_price != 0?item.event_price:item.price }} €</div>
+                        </div>
+                    </div>
+                    <div class="product-desc mb-0">{{item.description}}</div>
+                    <!-- <div class="allergens" *ngIf="allergenList.length > 0">
+                        <ng-container *ngFor="let allergen of allergenList">
+                            <img class="{{selectedAllergen.indexOf(allergen.id)>-1?'active':'inactive'}}"
+                                src="{{allergen.picto_url}}" alt="{{allergen.label}}">
+                        </ng-container>
+                        <span (click)="openModal()">{{staticContent.allergens}}</span>
+                    </div> -->
+                </div>
+            </div>
+
+            <!-- Line tab layout -->
+            <ng-container *ngIf="item.submenu">
+                <div class="line-tab-layout">
+                    <div *ngFor="let category of item.submenu;let i=index" class="tab">
+                        <div class="line {{stepCount >= i?'active':''}}"></div>
+                    </div>
+                </div>
+            </ng-container>
+
+            <ng-container *ngIf="selectedSubmenu">
+                <div class="product-options-title submenu">{{selectedSubmenu.label}}
+                    ({{selectedSubmenu.product_list.length}})
+                    <!--<span class="option-tab-cntrols" *ngIf="showSubmenuProduct.length > 1">
+                        <img class="left" src="assets/arrow-right.svg" alt="left" (click)="carousel_mobile.prev()">
+                        <img src="assets/arrow-right.svg" alt="right" (click)="carousel_mobile.next()">
+                    </span>-->
+                </div>
+                <div class="row product-options-container">
+                    <ng-container *ngFor="let product of selectedSubmenu.product_list">
+                        <div class="col-6 options">
+
+                            <div class="options-card {{selectedProduct && selectedProduct != product?'deactive':''}} {{product.selected?'active':''}}" (click)="allowOrder && selectProduct(product)"
+                                 *ngIf="!product?.out_of_stock">
+                                <img src="{{product.img_url_set.M}}" alt="base">
+                                <div class="name">{{product.label}}
+                                    <ng-container *ngIf="product.additional_price > 0">
+                                        <span class="amount"> + {{floatCheck(product.additional_price)}} €</span>
+                                    </ng-container>
+                                </div>
+                            </div>
+
+                            <!-- OUT OF STOCK LABEL -->
+                            <div class="row mx-0 h-100 w-100 out-of-stock-mobile-label align-items-center" *ngIf="product?.out_of_stock">
+                                <div class="col text-center">
+                                    <span>{{this.brand?.module_parameter?.out_of_stock_label}}</span>
+                                </div>
+                            </div>
+
+                            <!-- OUT OF STOCK -->
+                            <div class="options-card out-of-stock" *ngIf="product?.out_of_stock">
+                                <img src="{{product.img_url_set.M}}" alt="base">
+                                <div class="name">{{product.label}}
+                                    <ng-container *ngIf="product.additional_price > 0">
+                                        <span class="amount"> + {{floatCheck(product.additional_price)}} €</span>
+                                    </ng-container>
+                                </div>
+                            </div>
+
+                        </div>
+                    </ng-container>
+                </div>
+                <!--<ngb-carousel #carousel_mobile class="carousel slide" [showNavigationIndicators]="false"
+                    [showNavigationArrows]="false" [interval]="false">
+                    <ng-container *ngFor="let product_list of showSubmenuProduct">
+                        <ng-template ngbSlide class="carousel-item">
+                            <div class="row product-options-container">
+                                <ng-container *ngFor="let product of product_list">
+                                    <div class="col-4 options">
+                                        <div class="options-card {{selectedProduct && selectedProduct != product?'deactive':''}} {{product.selected?'active':''}}"
+                                            (click)="allowOrder && selectProduct(product)">
+                                            <img src="{{product.img_url}}" alt="base">
+                                            <div class="name">{{product.label}}</div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </ng-template>
+                    </ng-container>
+                </ngb-carousel>
+                <div class="row product-options-container">
+                    <ng-container *ngFor="let product of selectedSubmenu.product_list; let i=index">
+                        <div class="col-4 options">
+                            <div class="options-card {{product.selected?'active':''}}"
+                                (click)="selectProduct(product,i)">
+                                <img src="{{product.img_url}}" alt="base">
+                                <div class="name">{{product.label}}</div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div> -->
+            </ng-container>
+
+            <!-- Layouts for different types of options -->
+            <ng-container *ngIf="selectedProduct">
+                <ng-container *ngIf="selectedProduct.options">
+                    <ng-container *ngFor="let option of selectedProduct.options">
+                        <ng-container *ngIf="!option.is_custom">
+                            <div class="product-options-title">{{option.label}}
+                                <ng-container *ngIf="option.price > 0">
+                                    <span class="amount"> + {{floatCheck(option.price)}} €</span>
+                                </ng-container>
+                            </div>
+                            <div class="product-options-subtitle">{{staticContent.select_items}} : <ng-container
+                                    *ngIf="option.fixed_number != option.maximum">{{option.fixed_number}}
+                                    {{staticContent.to}} {{option.maximum}}
+                                </ng-container>
+                                <ng-container *ngIf="option.fixed_number == option.maximum">{{option.fixed_number}}
+                                </ng-container>
+                            </div>
+                            <div class="row product-options-container">
+                                <ng-container *ngFor="let optionItem of option.option_items">
+                                    <div class="col-4 options">
+                                        <div class="options-card {{optionItem.selected?'active':''}} {{!optionItem.selected && option.max_selected?'deactive':''}}"
+                                            (click)="selectOption(optionItem,option)">
+                                            <img src="{{optionItem.asset_set.M}}" alt="base">
+                                            <div class="name">{{optionItem.label}}
+                                                <ng-container *ngIf="optionItem.price > 0">
+                                                    <span class="amount"> + {{floatCheck(optionItem.price)}} €</span>
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
+            </ng-container>
+
+            <!-- Layouts for different types of options -->
+            <!-- <ng-container *ngIf="itemProduct.options">
+                <ng-container *ngFor="let option of itemProduct.options">
+                    <div class="product-options-title">{{option.label}}</div>
+
+                    <div class="row product-options-container" *ngFor="let optionItem of option.option_items">
+                        <div class="col-4 options">
+                            <div class="options-card {{optionItem.selected && (item.quantity > 0)?'active':''}}"
+                                (click)="selectOption(optionItem)">
+                                <img src="{{optionItem.asset}}" alt="base">
+                                <div class="name">{{optionItem.label}}
+                                    <ng-container *ngIf="optionItem.price > 0">
+                                        <span class="add-icon">+</span>
+                                        <span class="amount">€ {{optionItem.price}}</span>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-container> -->
+
+            <!-- Layouts for different types of options ends here-->
+            <!-- Add/Remove Items -->
+            <!-- <div class="add-remove" *ngIf="item.quantity > 0">
+                <div class="action" (click)="removeItem()"><img src="assets/remove.svg"></div>
+                <div class="qty">{{item.quantity}}</div>
+                <div class="action" (click)="addItem()"><img src="assets/add.svg"></div>
+            </div> -->
+
+            <div class="space-80"></div>
+            <div class="space-80"></div>
+            <div *ngIf="allowOrder" class="footer-cart">
+                <button *ngIf="item.submenu.length > 1 && stepCount > 0"
+                    class="btn bordered half-back {{stepCount > 0?'':'disabled'}}"
+                    (click)="stepCount > 0?previousCategory():''">
+                    <img src="assets/arrow-thin-left.svg">{{staticContent.back}}</button>
+                <button *ngIf="item.submenu.length >= 1 && stepCount == 0" class="btn bordered half-back"
+                    (click)="navigate('catalog')">
+                    <img src="assets/arrow-thin-left.svg">{{staticContent.back}}</button>
+
+                <button
+                    *ngIf="item.submenu.length >= 1 && stepCount == (item.submenu.length - 1) && item.quantity == 0"
+                    class="btn half-next bordered" disabled="{{selectedSubmenu.has_product && allowNext?'':'disabled'}}"
+                    (click)="addToCart(); cartClickAnimationMobile($event)">{{staticContent.add_to_cart}}<div
+                        class="iconcheck"></div></button>
+
+                <button *ngIf="item.submenu.length > 1 && (stepCount < (item.submenu.length - 1))"
+                    class="btn half-next bordered"
+                    disabled="{{((stepCount + 1) < item.submenu.length) && selectedSubmenu.has_product && allowNext?'':'disabled'}}"
+                    (click)="(stepCount + 1) < item.submenu.length?nextCategory():''">{{staticContent.next}}<img
+                        src="assets/arrow-thin-right.svg">
+                </button>
+                <!-- <button *ngIf="item.quantity == 0" class="btn mt-2"
+                    (click)="addToCart()">{{staticContent.add_to_cart}}</button>
+                <button class="btn back bordered" (click)="navigate('catalog')">{{staticContent.back}}<img
+                        src="assets/arrow-thin-left.svg"></button> -->
+            </div>
+            <div *ngIf="!allowOrder" class="footer-cart">
+                <button *ngIf="item.submenu.length > 1 && stepCount > 0"
+                    class="btn bordered half-back {{stepCount > 0?'':'disabled'}}"
+                    (click)="stepCount > 0?previousCategory():''">
+                    <img src="assets/arrow-thin-left.svg">{{staticContent.back}}</button>
+
+                <button *ngIf="item.submenu.length > 1 && stepCount == 0" class="btn bordered half-back"
+                    (click)="navigate('catalog')">
+                    <img src="assets/arrow-thin-left.svg">{{staticContent.back}}</button>
+
+                <button *ngIf="item.submenu.length > 1 && (stepCount < (item.submenu.length - 1))"
+                    class="btn half-next"
+                    (click)="(stepCount + 1) < item.submenu.length?nextCategory():''">{{staticContent.next}}<img
+                        src="assets/arrow-thin-right.svg"></button>
+            </div>
+        </div>
+    </div>
+</div>

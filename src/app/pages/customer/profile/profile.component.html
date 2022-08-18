@@ -1,0 +1,209 @@
+<div class="desktop-view">
+
+    <app-header-single></app-header-single>
+
+    <!-- Product List     -->
+    <div class="container">
+        <div class="row cart-details">
+            <div class="col-md-3">
+                <app-side-profile></app-side-profile>
+            </div>
+            <div class="col-md-9">
+                <div class="account-profile-details" *ngIf="!editing">
+                    <div class="info-group">
+                        <div class="label">{{staticContent.firstname}}:</div>
+                        <div class="input-value">{{firstName}}</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="label">{{staticContent.lastname}}:</div>
+                        <div class="input-value">{{lastName}}</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="label">{{staticContent.email}}:</div>
+                        <div class="input-value">{{customerEmail}}</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="label">{{staticContent.phone}}:</div>
+                        <div class="input-value">{{customerPhone}}</div>
+                    </div>
+                    <!-- <div class="info-group">
+                        <div class="label">Mot de passe:</div>
+                        <div class="input-value">..........</div>
+                    </div> -->
+                    <div class="more" (click)="edit()">{{staticContent.update_profile}}</div>
+                </div>
+                <div class="account-profile-details" *ngIf="editing">
+                    <h4>{{staticContent.information}}</h4>
+                    <form #form1="ngForm">
+                        <div class="two-column-input">
+                            <div class="column-1">
+                                <div class="form-group">
+                                    <label for="firstname">{{staticContent.firstname}}:</label>
+                                    <input required type="text" class="form-control" maxlength="32"
+                                        placeholder="{{staticContent.firstname}}" id="firstname" name="firstname"
+                                        [(ngModel)]="firstName" #firstname="ngModel">
+                                </div>
+                            </div>
+                            <div class="column-2">
+                                <div class="form-group">
+                                    <label for="lastname">{{staticContent.lastname}}:</label>
+                                    <input required type="type" class="form-control" maxlength="32"
+                                        placeholder="{{staticContent.lastname}}" id="lastname" name="lastname"
+                                        [(ngModel)]="lastName" #lastname="ngModel">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">{{staticContent.email}}:</label>
+                            <input required disabled type="email" class="form-control" maxlength="128"
+                                placeholder="example@email.com" id="email" name="email" [(ngModel)]="customerEmail"
+                                #email="ngModel">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">{{staticContent.phone}}:</label>
+                            <input required type="tel" class="form-control" pattern="[\+]{0,1}[0-9\- ]+" maxlength="20"
+                                placeholder="+1 789 456 123" id="phone" name="phone" [(ngModel)]="customerPhone"
+                                #phone="ngModel">
+                        </div>
+                        <h4 class="breakpoint">{{staticContent.update_password}}</h4>
+                        <div class="form-group">
+                            <label for="email">{{staticContent.current_password}}:</label>
+                            <input type="password" class="form-control" maxlength="16"
+                                placeholder="{{staticContent.current_password}}" id="current_password"
+                                name="current_password" [(ngModel)]="currentPassword" #current_password="ngModel">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">{{staticContent.new_password}}:</label>
+                            <input type="password" class="form-control" maxlength="16"
+                                placeholder="{{staticContent.new_password}}" id="password" name="password"
+                                [(ngModel)]="customerPassword" #password="ngModel">
+                        </div>
+                        <!-- <div class="form-group">
+                            <label for="email">Verification :</label>
+                            <input type="password" class="form-control" placeholder="••••••••••••••••••••">
+                        </div> -->
+                        <div class="row">
+                            <div class="col">
+                                <button class="btn" (click)="cancel()">{{staticContent.cancel}}</button>
+                            </div>
+                            <div class="col">
+                                <button class="btn" (click)="update()"
+                                    [disabled]="!form1.valid || !((currentPassword == '' &&  customerPassword == '') || (currentPassword != '' &&  customerPassword != ''))">{{staticContent.save}}</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="space-100"></div>
+    </div>
+</div>
+
+<!-- Mobile View -->
+<div class="mobile-view">
+    <div class="wrapper-sm">
+        <div class="fixed-header">
+            <div class="profile-mb-header">
+                <div class="icon" (click)="takeHome()"><img src="assets/close.svg" alt="close"></div>
+                <div class="text">{{staticContent.my_profile}}</div>
+            </div>
+        </div>
+        <div class="profile-description">
+            <div class="profile-pic">{{customerInitials}}</div>
+            <div class="profile-details-list" (click)="edit()" *ngIf="!editing">
+                <ul>
+                    <li>
+                        <div class="info-group">
+                            <div class="label">{{staticContent.firstname}}</div>
+                            <div class="text">{{firstName}} </div>
+                        </div>
+                        <img src="assets/arrow-right.svg" alt="action">
+                    </li>
+                    <li>
+                        <div class="info-group">
+                            <div class="label">{{staticContent.lastname}}</div>
+                            <div class="text">{{lastName}} </div>
+                        </div>
+                        <img src="assets/arrow-right.svg" alt="action">
+                    </li>
+                    <li>
+                        <div class="info-group">
+                            <div class="label">{{staticContent.phone}}</div>
+                            <div class="text">{{customerPhone}} </div>
+                        </div>
+                        <img src="assets/arrow-right.svg" alt="action">
+                    </li>
+                    <li>
+                        <div class="info-group">
+                            <div class="label">{{staticContent.email}}:</div>
+                            <div class="text">{{customerEmail}} </div>
+                        </div>
+                        <img src="assets/arrow-right.svg" alt="action">
+                    </li>
+                </ul>
+            </div>
+
+            <div class="profile-details-list" *ngIf="editing">
+                <form #form2="ngForm">
+                    <ul>
+                        <li class="editing">
+                            <div class="info-group">
+                                <div class="label">{{staticContent.firstname}}</div>
+                                <input required type="text" class="form-control" maxlength="32"
+                                    placeholder="{{staticContent.firstname}}" id="firstname_mobile"
+                                    name="firstname_mobile" [(ngModel)]="firstName" #firstname_mobile="ngModel">
+                            </div>
+                        </li>
+                        <li class="editing">
+                            <div class="info-group">
+                                <div class="label">{{staticContent.lastname}}</div>
+                                <input required type="type" class="form-control" maxlength="32"
+                                    placeholder="{{staticContent.lastname}}" id="lastname_mobile" name="lastname_mobile"
+                                    [(ngModel)]="lastName" #lastname_mobile="ngModel">
+                            </div>
+                        </li>
+                        <li class="editing">
+                            <div class="info-group">
+                                <div class="label">{{staticContent.phone}}</div>
+                                <input required type="tel" class="form-control" pattern="[\+]{0,1}[0-9\- ]+"
+                                    maxlength="20" placeholder="+1 789 456 123" id="phone_mobile" name="phone_mobile"
+                                    [(ngModel)]="customerPhone" #phone_mobile="ngModel">
+                            </div>
+                        </li>
+                        <li class="editing">
+                            <div class="info-group">
+                                <div class="label">{{staticContent.email}}:</div>
+                                <input required disabled type="email" class="form-control" maxlength="128"
+                                    placeholder="example@email.com" id="email_mobile" name="email_mobile"
+                                    [(ngModel)]="customerEmail" #email_mobile="ngModel">
+                            </div>
+                        </li>
+                        <li class="editing">
+                            <div class="info-group">
+                                <div class="label">{{staticContent.current_password}}:</div>
+                                <input type="password" class="form-control" maxlength="16"
+                                    placeholder="{{staticContent.current_password}}" id="current_password_mobile"
+                                    name="current_password_mobile" [(ngModel)]="currentPassword"
+                                    #current_password_mobile="ngModel">
+                            </div>
+                        </li>
+                        <li class="editing">
+                            <div class="info-group">
+                                <div class="label">{{staticContent.new_password}}:</div>
+                                <input type="password" class="form-control" maxlength="16"
+                                    placeholder="{{staticContent.new_password}}" id="password_mobile"
+                                    name="password_mobile" [(ngModel)]="customerPassword" #password_mobile="ngModel">
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn" (click)="update()"
+                                [disabled]="!form2.valid || !((currentPassword == '' &&  customerPassword == '') || (currentPassword != '' &&  customerPassword != ''))">{{staticContent.save}}</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

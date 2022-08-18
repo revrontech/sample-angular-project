@@ -1,0 +1,54 @@
+<!-- Login View Component -->
+<!-- Desktop View -->
+<div class="desktop-view">
+
+    <app-header-single></app-header-single>
+
+    <!-- Product List     -->
+    <div class="container">
+        <div class="row login-payment">
+            <div class="col-md-9">
+                <div class="login">
+
+                    <!-- <div class="back">
+                            <img src="assets/cancel.svg">
+                        </div> -->
+                    <div class="login-card">
+                        <div class="title">{{staticContent.title}}</div>
+
+                        <form #form1="ngForm">
+                            <div class="form-group" *ngIf="validateStep == 0">
+                                <label for="email">{{staticContent.email}}:</label>
+                                <input required class="form-control" pattern=".+@.+\..+" type="email" maxlength="128"
+                                    name="email" id="email" placeholder="example@email.com" [(ngModel)]="customerEmail"
+                                    #email="ngModel">
+                            </div>
+                        </form>
+                        <form #form2="ngForm">
+                            <div class="form-group" *ngIf="validateStep == 1">
+                                <label for="otp">{{staticContent.otp}}:</label>
+                                <input required type="tel" class="form-control" pattern="[0-9]{6}" maxlength="20"
+                                    placeholder="{{staticContent.otp}}" id="otp" name="otp" [(ngModel)]="customerOTP"
+                                    #otp="ngModel">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="login-footer">
+                        <div class="row">
+                            <div class="col">
+                                <button (click)="goBack()" class="btn bordered">{{staticContent.back}}</button>
+                            </div>
+                            <div class="col">
+                                <button class="btn" (click)="validate()"
+                                    [disabled]="(validateStep == 0 && !form1.valid) || (validateStep == 1 && !form2.valid)">{{staticContent.validate}}</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <app-side-cart-order class="col-md-3 cart-wrapper"></app-side-cart-order>
+        </div>
+        <div class="space-100"></div>
+    </div>
+</div>

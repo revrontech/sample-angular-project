@@ -1,0 +1,82 @@
+<!-- Register Modal -->
+<!-- Modal Header -->
+<header class="header-mobile">
+    <div class="menu dismiss" (click)="modal.close()"><img src="assets/close.svg"></div>
+    <div class="logo"><img src="{{brandLogo}}" alt="Logo"></div>
+    <div class="cart"><img (click)="openCart()" src="assets/cart.svg" alt="Cart"></div>
+</header>
+
+<!-- Modal body -->
+<div class="modal-body">
+    <h4 class="title">{{staticContent.title}}</h4>
+    <div class="desc">{{staticContent.description}}</div>
+    <!-- <div class="heading">
+        Join with social media
+    </div>
+    <div class="social-signup">
+        <div class="facebook">
+            <button class="btn"><img src="assets/facebook.svg"> Facebook</button>
+        </div>
+        <div class="google">
+            <button class="btn"><img src="assets/google.svg"> Google</button>
+        </div>
+    </div> -->
+    <div class="heading">{{staticContent.email_register}}</div>
+
+    <form #form1="ngForm">
+        <ng-container *ngIf="registerStep == 0">
+            <div class="form-group">
+                <label for="firstname">{{staticContent.firstname}}:</label>
+                <input required type="text" class="form-control" maxlength="32"
+                    placeholder="{{staticContent.firstname}}" id="firstname" name="firstname" [(ngModel)]="firstName"
+                    #firstname="ngModel">
+            </div>
+            <div class="form-group">
+                <label for="lastname">{{staticContent.lastname}}:</label>
+                <input required type="type" class="form-control" maxlength="32" placeholder="{{staticContent.lastname}}"
+                    id="lastname" name="lastname" [(ngModel)]="lastName" #lastname="ngModel">
+            </div>
+            <div class="form-group">
+                <label for="email">{{staticContent.email}}:</label>
+                <input required type="email" class="form-control" maxlength="128" placeholder="example@email.com"
+                    id="email" name="email" [(ngModel)]="customerEmail" #email="ngModel">
+            </div>
+            <div class="form-group">
+                <label for="phone">{{staticContent.phone}}:</label>
+                <input required type="tel" class="form-control" pattern="[\+]{0,1}[0-9\- ]+" maxlength="20"
+                    placeholder="+1 789 456 123" id="phone" name="phone" [(ngModel)]="customerPhone" #phone="ngModel">
+            </div>
+            <div class="form-group">
+                <label for="password">{{staticContent.password}}:</label>
+                <input required type="password" class="form-control" maxlength="16"
+                    placeholder="{{staticContent.password}}" id="password" name="password"
+                    [(ngModel)]="customerPassword" #password="ngModel">
+            </div>
+
+            <div class="form-group remember-me">
+                <div class="custom-control custom-checkbox">
+                    <input required type="checkbox" class="custom-control-input" name="termsOfUse" id="termsOfUse" [(ngModel)]="this.termsOfUse">
+                    <label class="custom-control-label" for="termsOfUse">
+                        J'ai lu et j'accepte les
+                        <a href="https://www.green2green.com/conditions-generales-de-vente/" target="_blank">conditions d'utilisation</a>
+                        et la
+                        <a href="https://www.green2green.com/politique-de-confidentialite/" target="_blank">politique de protection des données personnelles</a>
+                    </label>
+                </div>
+            </div>
+
+        </ng-container>
+
+    </form>
+    <form #form2="ngForm">
+        <div class="form-group" *ngIf="registerStep == 1">
+            <label for="otp">{{staticContent.otp}}:</label>
+            <input required type="tel" class="form-control" pattern="[0-9]{6}" maxlength="20"
+                placeholder="{{staticContent.otp}}" id="otp" name="otp" [(ngModel)]="customerOTP" #otp="ngModel">
+        </div>
+    </form>
+    <button type="submit" class="btn" (click)="register()"
+        [disabled]="(registerStep == 0 && !form1.valid) || (registerStep == 1 && !form2.valid)">{{registerStep == 1?staticContent.verify_otp:staticContent.register}}</button>
+    <button *ngIf="registerStep == 0" class="btn bordered mb-4" (click)="login()">{{staticContent.login}}</button>
+    <button *ngIf="registerStep == 1" class="btn bordered mb-4" (click)="back()">{{staticContent.back}}</button>
+</div>

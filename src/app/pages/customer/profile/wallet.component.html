@@ -1,0 +1,68 @@
+<!-- Wallet page -->
+<div class="wallet-page">
+    <app-header-single></app-header-single>
+    <div class="wrapper-sm">
+        <div class="fixed-header">
+            <div class="profile-mb-header">
+                <div class="icon" (click)="takeHome()"><img src="assets/close.svg" alt="close"></div>
+                <div class="text">{{staticContent.wallet}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row cart-details">
+            <div class="col-lg-3">
+                <app-side-profile></app-side-profile>
+            </div>
+            <div class="col-lg-9">
+                <div class="account-profile-details" *ngIf="!editing">
+                    <div class="profile-wallet">
+                        <div class="title">{{staticContent.payment_cards}}:</div>
+                        <ul class="card-list">
+                            <ng-container *ngFor="let card of cardList">
+
+                                <!-- FIXME | DEBUG -->
+                                <!--<li>
+                                    {{card | json}}
+                                </li>-->
+
+                                <li class="single-card">
+                                    <div class="saved-payment-method" (click)="toggleCard(card)">
+                                        <div class="check"><img *ngIf="card.default" src="assets/check.svg"></div>
+                                        <div class="icon"><img [src]="'assets/'+card.brand+'.svg'"></div>
+                                        <div class="card-number">{{card.card_number}} {{card.exp_month}} / {{card.exp_year}}</div>
+                                        <div class="dropdown"><img class="{{card.show?'card-active':'card-inactive'}}" src="assets/arrow-down.svg"></div>
+                                    </div>
+                                    <div class="payment-method-body {{card.show?'show-buttons':''}}">
+                                        <button class="btn delete" (click)="deleteCard(card.id)">Effacer</button>
+                                        <button class="btn default" (click)="setDefaultCard(card.id)">Carte par défaut</button>
+                                    </div>
+                                </li>
+
+                                <!--<li class="single-card">
+                                    <div class="saved-payment-method" (click)="toggleCard(card)">
+                                        <div class="check"><img *ngIf="card.default" src="assets/check.svg"></div>
+                                        <div class="icon"><img [src]="'assets/'+card.cardType+'.svg'"></div>
+                                        <div class="card-number">{{card.card_number}} {{card.expiration.substr(0,2)}} / {{card.expiration.substr(-2,2)}}</div>
+                                        <div class="dropdown"><img class="{{card.show?'card-active':'card-inactive'}}" src="assets/arrow-down.svg"></div>
+                                    </div>
+                                    <div class="payment-method-body {{card.show?'show-buttons':''}}">
+                                        <button class="btn delete" (click)="deleteCard(card.payment_id)">Effacer</button>
+                                        <button class="btn default" (click)="setDefaultCard(card.payment_id)">Carte par défaut</button>
+                                    </div>
+                                </li>-->
+                            </ng-container>
+                        </ul>
+                        
+                        <div (click)="addCard()" class="add-payment">Ajouter une carte de paiement</div>
+                    </div>
+                </div>
+                <div class="account-profile-details" *ngIf="editing">
+                    <iframe *ngIf="addCardPaygreen" #card_frame [src]="cardURL"  frameborder="0"></iframe>
+                    <app-stripe-payment [configStripeWindow]='configStripe' (onResult)="processStripeResult($event)" *ngIf="addCardStripe"></app-stripe-payment>
+                </div>
+            </div>
+        </div>
+        <div class="space-100"></div>
+    </div>
+</div>

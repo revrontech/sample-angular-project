@@ -1,0 +1,80 @@
+<!-- Login View Component -->
+<!-- Desktop View -->
+<div class="desktop-view">
+
+    <app-header-single></app-header-single>
+
+    <!-- Product List     -->
+    <div class="container">
+        <div class="row login-payment">
+            <div class="col-md-9">
+                <div class="login">
+
+                    <!-- <div class="back">
+                            <img src="assets/cancel.svg">
+                        </div> -->
+                    <form #form1="ngForm">
+                        <div class="login-card">
+                            <div class="title">{{staticContent.title}}</div>
+                            <div class="desc">{{staticContent.description}}</div>
+
+                            <div class="form-group">
+                                <label for="email">{{staticContent.email}}:</label>
+                                <input required class="form-control" pattern=".+@.+\..+" type="email" maxlength="128"
+                                    name="email" id="email" placeholder="example@email.com" [(ngModel)]="customerEmail"
+                                    #email="ngModel">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">{{staticContent.password}}:</label>
+                                <input required type="password" class="form-control" maxlength="20" minlength="3"
+                                    placeholder="{{staticContent.password}}" name="password" id="password"
+                                    [(ngModel)]="customerPassword" #password="ngModel">
+                                <div (click)="forgot()" class="forgot-password">{{staticContent.forgot}}</div>
+                            </div>
+
+                            <div class="form-group remember-me">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" name="remember_me"
+                                        id="remember_me" [(ngModel)]="rememberMe" #remember_me="ngModel">
+                                    <label class="custom-control-label"
+                                        for="remember_me">{{staticContent.remember_me}}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="login-footer" *ngIf="!showSkip">
+                        <div class="row">
+                            <div class="col">
+                                <button class="btn bordered" (click)="register()">{{staticContent.register}}</button>
+                            </div>
+                            <div class="col">
+                                <button class="btn" (click)="login()" [disabled]="!form1.valid">{{staticContent.title}}</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="login-footer" *ngIf="showSkip">
+                        <div class="row">
+                            <div class="col">
+                                <button class="btn bordered" (click)="register()">{{staticContent.register}}</button>
+                            </div>
+                            <div class="col">
+                                <button class="btn" (click)="pseudo()">{{staticContent.skip}}</button>
+                            </div>
+                        </div>
+                        <div class="row pt-3">
+                            <div class="col">
+                                <button class="btn" (click)="login()" [disabled]="!form1.valid">{{staticContent.title}}</button>
+                            </div>
+                        </div>
+                       <!-- <div *ngIf="showSkip" class="skip" (click)="pseudo()">{{staticContent.skip}}</div>-->
+                    </div>
+
+                </div>
+            </div>
+            <app-side-cart-order class="col-md-3 cart-wrapper"></app-side-cart-order>
+        </div>
+        <div class="space-100"></div>
+    </div>
+</div>

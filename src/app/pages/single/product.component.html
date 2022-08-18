@@ -1,0 +1,216 @@
+<!-- Single Product View Component -->
+<div class="desktop-view">
+
+    <app-header-single></app-header-single>
+
+    <!-- Product Details -->
+    <div class="container product-details">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)"
+                        (click)="navigate('home')">{{staticContent.bread_crumb_main}}</a></li>
+                <li class="breadcrumb-item"><a href="javascript:void(0)"
+                        (click)="navigate('catalog')">{{staticContent.bread_crumb_catalog}}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{staticContent.bread_crumb_product}}</li>
+            </ol>
+        </nav>
+        <div class="row mt-45">
+            <div class="col" *ngIf="!allowOrder"></div>
+            <div class="col-md-9">
+
+                <div class="row simple-product" [ngClass]="{'out-of-stock': item?.out_of_stock}">
+                    <div class="col image">
+                        <img src="{{item.img_url_set.XL}}" alt="{{item.label}}">
+                    </div>
+                    <div class="col details">
+                        <div class="two-column-name">
+                            <div class="column-1">
+                                <div class="name">{{item.label}}</div>
+                            </div>
+                            <div class="column-2" *ngIf="item.event_price > 0 || item.price > 0">
+                                <div class="cost">{{item.event_price != 0?item.event_price:item.price}} €</div>
+                            </div>
+                        </div>
+                        <div class="product-desc">{{item.description}}</div>
+                        <div  class="two-column-name">
+                            <div class="pictograms column">
+                                <img class="pictogram-image"  *ngFor="let pictogram of item.pictograms" [src]="pictogram.icon_url" alt="">
+                            </div>
+                            <div class="allergens column" *ngIf="item.allergens.length > 0">
+                                <ng-container *ngFor="let allergen of allergenList">
+                                    <img class="{{selectedAllergen.indexOf(allergen.id)>-1?'active':'inactive'}}"
+                                        src="{{allergen.picto_url}}" alt="{{allergen.label}}">
+                                </ng-container>
+                                <!-- <img class="inactive" src="assets/allergens/Crustacean.svg" alt="Crustacean">
+                                <img class="inactive" src="assets/allergens/Fish.svg" alt="Fish"> -->
+                                <span (click)="openModal()">{{staticContent.allergens}}</span>
+                            </div>
+                        </div>
+                        <!-- <div class="add-remove" *ngIf="item.quantity > 0">
+                            <div class="action" (click)="removeItem()"><img src="assets/remove.svg"></div>
+                            <div class="qty">{{item.quantity}}</div>
+                            <div class="action" (click)="addItem()"><img src="assets/add.svg"></div>
+                        </div> -->
+                        <div class="two-column-input">
+                            <div class="column-1">
+                                <button class="btn bordered"
+                                    (click)="navigate('catalog')">{{staticContent.back_to_catalog}}</button>
+                            </div>
+                            <div class="column-2" *ngIf="allowOrder">
+                                <button *ngIf="item.quantity == 0" class="btn bordered"
+                                    [disabled]="!allowNext || item?.out_of_stock" (click)="addToCart(); cartClickAnimation($event)">{{staticContent.add_to_cart}}<div class="iconcheck"></div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ng-container *ngIf="itemListOptions.length > 0 && !item?.out_of_stock">
+                    <ng-container *ngFor="let option of itemListOptions">
+                        <ng-container *ngIf="!option.is_custom">
+                            <div class="product-options-title">{{option.label}}
+                                <ng-container *ngIf="option.price > 0">
+                                    <span class="add-icon"> + </span>
+                                    <span class="amount">{{floatCheck(option.price)}} €</span>
+                                </ng-container>
+                            </div>
+                            <div class="product-options-subtitle">{{staticContent.select_items}} : <ng-container
+                                    *ngIf="option.fixed_number != option.maximum">{{option.fixed_number}}
+                                    {{staticContent.to}} {{option.maximum}}
+                                </ng-container>
+                                <ng-container *ngIf="option.fixed_number == option.maximum">{{option.fixed_number}}
+                                </ng-container>
+                            </div>
+
+                            <div class="row product-options-container">
+                                <ng-container *ngFor="let optionItem of option.option_items">
+                                    <div class="col-3 options">
+                                        <div class="options-card {{optionItem.selected?'active':''}} {{!optionItem.selected && option.max_selected?'deactive':''}}"
+                                            (click)="allowOrder && selectOption(optionItem,option)">
+                                            <div class="drinks">
+                                                <img src="{{optionItem.asset_set.M}}" alt="base">
+                                            </div>
+                                            <div class="name">{{optionItem.label}}
+                                                <ng-container *ngIf="optionItem.price > 0">
+                                                    <span class="amount"> + {{floatCheck(optionItem.price)}} €</span>
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
+                <!-- <div class="product-options-title">
+                    Base
+                </div>
+                <div class="row product-options-container">
+                    <div class="col-4 options">
+                        <div class="options-card active">
+                            <img src="assets/base-01.png" alt="base">
+                            <div class="name">Frites</div>
+                        </div>
+                    </div>
+                    <div class="col-4 options">
+                        <div class="options-card">
+                            <img src="assets/base-03.png" alt="base">
+                            <div class="name">Coleslaw <span class="add-icon">+</span> <span class="amount">1.00
+                                    €</span></div>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+            <div class="col" *ngIf="!allowOrder"></div>
+            <app-side-cart *ngIf="allowOrder" class="col-md-3 cart-wrapper"></app-side-cart>
+        </div>
+        <div class="space-100"></div>
+    </div>
+</div>
+
+<!-- Mobile View -->
+<div class="mobile-view">
+    <div class="product-details">
+        <!-- Mobile Header -->
+        <app-header-single-mobile></app-header-single-mobile>
+
+        <div class="mobile-product-view">
+            <div class="row simple-product">
+                <div class="col image">
+                    <img src="{{item.img_url_set.XL}}" alt="{{item.label}}">
+                </div>
+                <div class="col details">
+                    <div class="two-column-name">
+                        <div class="column-1">
+                            <div class="name">{{item.label}}</div>
+                        </div>
+                        <div class="column-2" *ngIf="item.event_price > 0 || item.price > 0">
+                            <div class="cost">{{item.event_price != 0?item.event_price:item.price }} €</div>
+                        </div>
+                    </div>
+                    <div class="product-desc">{{item.description}}</div>
+                    <div class="allergens" *ngIf="item.allergens.length > 0">
+                        <ng-container *ngFor="let allergen of allergenList">
+                            <img class="{{selectedAllergen.indexOf(allergen.id)>-1?'active':'inactive'}}"
+                                src="{{allergen.picto_url}}" alt="{{allergen.label}}">
+                        </ng-container>
+                        <span (click)="openModal()">{{staticContent.allergens}}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Layouts for different types of options -->
+            <ng-container *ngIf="itemListOptions.length > 0">
+                <ng-container *ngFor="let option of itemListOptions">
+                    <ng-container *ngIf="!option.is_custom">
+                        <div class="product-options-title">{{option.label}}
+                            <ng-container *ngIf="option.price > 0">
+                                <span class="add-icon"> + </span>
+                                <span class="amount">{{floatCheck(option.price)}} €</span>
+                            </ng-container>
+                        </div>
+                        <div class="product-options-subtitle">{{staticContent.select_items}} : <ng-container
+                                *ngIf="option.fixed_number != option.maximum">{{option.fixed_number}}
+                                {{staticContent.to}} {{option.maximum}}
+                            </ng-container>
+                            <ng-container *ngIf="option.fixed_number == option.maximum">{{option.fixed_number}}
+                            </ng-container>
+                        </div>
+
+                        <div class="row product-options-container">
+                            <ng-container *ngFor="let optionItem of option.option_items">
+                                <div class="col-4 options">
+                                    <div class="options-card {{optionItem.selected?'active':''}} {{!optionItem.selected && option.max_selected?'deactive':''}}"
+                                        (click)="allowOrder && selectOption(optionItem,option)">
+                                        <img src="{{optionItem.asset_set.M}}" alt="base">
+                                        <div class="name">{{optionItem.label}}
+                                            <ng-container *ngIf="optionItem.price > 0">
+                                                <span class="amount"> + {{floatCheck(optionItem.price)}} €</span>
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </ng-container>
+
+            <!-- Layouts for different types of options ends here-->
+            <!-- Add/Remove Items -->
+            <!-- <div class="add-remove" *ngIf="item.quantity > 0">
+                <div class="action" (click)="removeItem()"><img src="assets/remove.svg"></div>
+                <div class="qty">{{item.quantity}}</div>
+                <div class="action" (click)="addItem()"><img src="assets/add.svg"></div>
+            </div> -->
+
+            <div class="space-80"></div>
+            <div class="footer-cart">
+                <button class="btn half-back bordered" (click)="navigate('catalog')">{{staticContent.back}}<img
+                        src="assets/arrow-thin-left.svg"></button>
+                <button *ngIf="allowOrder && item.quantity == 0" class="btn half-next"
+                    (click)="cartClickAnimationMobile($event)" disabled="{{allowNext?'':'disabled'}}"
+                    (click)="addToCart()">{{staticContent.add_to_cart}}<div class="iconcheck"></div></button>
+            </div>
+        </div>
+    </div>
+</div>

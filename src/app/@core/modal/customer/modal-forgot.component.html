@@ -1,0 +1,40 @@
+<!-- Forgot Password Modal -->
+<!-- Modal Header -->
+<header class="header-mobile">
+    <div class="menu dismiss" (click)="modal.close()"><img src="assets/close.svg"></div>
+    <div class="logo"><img src="{{brandLogo}}" alt="Logo"></div>
+    <div class="cart"><img (click)="openCart()" src="assets/cart.svg" alt="Cart"></div>
+</header>
+
+<!-- Modal body -->
+<div class="modal-body">
+    <h4 class="title">{{staticContent.title}}</h4>
+
+    <form #form1="ngForm">
+        <div class="form-group" *ngIf="forgotStep == 0">
+            <label for="email">{{staticContent.email}}:</label>
+            <input required type="email" class="form-control" maxlength="128" placeholder="example@email.com" id="email"
+                name="email" [(ngModel)]="customerEmail" #email="ngModel">
+        </div>
+    </form>
+
+    <form #form2="ngForm">
+        <ng-container *ngIf="forgotStep == 1">
+            <div class="form-group">
+                <label for="otp">{{staticContent.otp}}:</label>
+                <input required type="tel" class="form-control" pattern="[0-9]{6}" maxlength="20"
+                    placeholder="{{staticContent.otp}}" id="otp" name="otp" [(ngModel)]="customerOTP" #otp="ngModel">
+            </div>
+            <div class="form-group">
+                <label for="password">{{staticContent.password}}:</label>
+                <input required type="password" class="form-control" maxlength="16"
+                    placeholder="{{staticContent.password}}" id="password" name="password"
+                    [(ngModel)]="customerPassword" #password="ngModel">
+            </div>
+        </ng-container>
+    </form>
+    <button type="submit" class="btn" (click)="forgot()"
+        [disabled]="(forgotStep == 0 && !form1.valid) || (forgotStep == 1 && !form2.valid)">{{forgotStep == 1?staticContent.reset:staticContent.validate}}</button>
+    <button *ngIf="forgotStep == 0" class="btn bordered mb-4" (click)="login()">{{staticContent.login}}</button>
+    <button *ngIf="forgotStep == 1" class="btn bordered mb-4" (click)="back()">{{staticContent.back}}</button>
+</div>
